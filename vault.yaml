@@ -1,0 +1,8 @@
+# Windows Domain Controller Password
+vault_windows_password: "VMware123!"
+
+# vCenter Server Password
+vault_vcenter_password: "VMware123!"
+
+# Linux (K8s Nodes) Password
+vault_linux_password: "VMware123!"
