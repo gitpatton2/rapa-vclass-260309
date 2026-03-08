@@ -87,10 +87,10 @@
 
   - name: 04. Adding LAB Portgroups to LAB Switch
     community.vmware.vmware_portgroup:
-      hostname: "{{ item[0].host }}"
+      hostname: "{{ item.host }}"
       username: "{{ esxi_username }}"
       password: "{{ esxi_password }}"
-      esxi_hostname: "{{ item[0].host }}"
+      esxi_hostname: "{{ item.host }}"
       validate_certs: no
       switch: "{{ item.id }}"
       portgroup: "{{ item.id }}-Ansible"
