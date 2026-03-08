@@ -1,0 +1,35 @@
+all:
+  children:
+    windows:
+      hosts:
+        dc.vclass.local:
+          ansible_host: 10.10.10.1
+      vars:
+        ansible_user: administrator@vpshere.local
+        ansible_password: "{{ vault_windows_password }}"
+        ansible_connection: winrm
+        ansible_port: 5986
+        ansible_winrm_transport: credssp
+        ansible_winrm_server_cert_validation: validate
+    vcenter:
+      hosts:
+        vcsa.vclass.rapa:
+          ansible_host: 192.168.6.4
+      vars:
+        ansible_user: s00@vclass.rapa
+        ansible_password: "{{ vault_vcenter_password }}"
+    k8s_nodes:
+      hosts:
+        k8s-api-proxy-1.vclass.local:
+          ansible_host: 10.10.10.11
+        k8s-api-proxy-2.vclass.local:
+          ansible_host: 10.10.10.12
+        k8s-cp-1.vclass.local:
+          ansible_host: 10.10.10.21
+        k8s-cp-2.vclass.local:
+          ansible_host: 10.10.10.22
+        k8s-cp-3.vclass.local:
+          ansible_host: 10.10.10.23
+      vars:
+        ansible_user: ansible
+        ansible_password: "{{ vault_linux_password }}"
