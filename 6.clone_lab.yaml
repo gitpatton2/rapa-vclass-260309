@@ -33,6 +33,11 @@
     # - { id: S16, host: esx-02.vclass.rapa, ds: vSAN-ESX-02, Temp_DC: Temp-DC-2 }
     # - { id: S17, host: esx-02.vclass.rapa, ds: vSAN-ESX-02, Temp_DC: Temp-DC-2 }
 
+    portgroup_definitions:
+      - { suffix: "Mgmt", vlan: 10 }
+      - { suffix: "Storage", vlan: 11 }
+      - { suffix: "vMotion", vlan: 12 }
+
 
   tasks:
   - name: 01. Create LAB VM Folder
