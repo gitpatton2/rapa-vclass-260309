@@ -102,6 +102,18 @@
   #   loop: "{{ LAB_SID }}"
   #   delegate_to: localhost
 
+  - name: 04. Adding Multiple LAB Portgroups to LAB Switch
+    community.vmware.vmware_portgroup:
+      hostname: "{{ item.0.host }}"
+      username: "{{ esxi_username }}"
+      password: "{{ esxi_password }}"
+      esxi_hostname: "{{ item.0.host }}"
+      validate_certs: no
+      switch: "{{ item.0.id }}"
+      portgroup: "{{ item.0.id }}-{{ item.1.suffix }}"
+      vlan_id: "{{ item.1.vlan }}"
+    loop: "{{ LAB_SID | product(portgroup_definitions) | list }}"
+    delegate_to: localhost
 
   # - name: 05. Deploy Lab DC vm
   #   community.vmware.vmware_guest:
