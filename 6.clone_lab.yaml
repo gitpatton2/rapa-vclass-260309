@@ -102,55 +102,55 @@
   #   loop: "{{ LAB_SID }}"
   #   delegate_to: localhost
 
-  - name: 04. Adding Multiple LAB Portgroups to LAB Switch
-    community.vmware.vmware_portgroup:
-      hostname: "{{ item.0.host }}"
-      username: "{{ esxi_username }}"
-      password: "{{ esxi_password }}"
-      esxi_hostname: "{{ item.0.host }}"
+  # - name: 04. Adding Multiple LAB Portgroups to LAB Switch
+  #   community.vmware.vmware_portgroup:
+  #     hostname: "{{ item.0.host }}"
+  #     username: "{{ esxi_username }}"
+  #     password: "{{ esxi_password }}"
+  #     esxi_hostname: "{{ item.0.host }}"
+  #     validate_certs: no
+  #     switch: "{{ item.0.id }}"
+  #     portgroup: "{{ item.0.id }}-{{ item.1.suffix }}"
+  #     vlan_id: "{{ item.1.vlan }}"
+  #   loop: "{{ LAB_SID | product(portgroup_definitions) | list }}"
+  #   delegate_to: localhost
+
+  - name: 05. Deploy Lab DC vm
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
       validate_certs: no
-      switch: "{{ item.0.id }}"
-      portgroup: "{{ item.0.id }}-{{ item.1.suffix }}"
-      vlan_id: "{{ item.1.vlan }}"
-    loop: "{{ LAB_SID | product(portgroup_definitions) | list }}"
+      name: "{{ item.id }}-DC"
+      datacenter: "{{ datacenter_name }}"
+      folder: "{{ parent_folder }}{{ item.id }}"
+      esxi_hostname: "{{ item.host }}"
+      datastore: "{{ item.ds }}"
+      template: "{{ item.Temp_DC }}"
+      # linked_clone: True
+      # snapshot_src: "{{ snapshot_name }}"
+    loop: "{{ LAB_SID }}"
     delegate_to: localhost
 
-  # - name: 05. Deploy Lab DC vm
-  #   community.vmware.vmware_guest:
-  #     hostname: "{{ vcenter_hostname }}"
-  #     username: "{{ vcenter_username }}"
-  #     password: "{{ vcenter_password }}"
-  #     validate_certs: no
-  #     name: "{{ item.id }}-DC"
-  #     datacenter: "{{ datacenter_name }}"
-  #     folder: "{{ parent_folder }}{{ item.id }}"
-  #     esxi_hostname: "{{ item.host }}"
-  #     datastore: "{{ item.ds }}"
-  #     template: "{{ item.Temp_DC }}"
-  #     linked_clone: True
-  #     snapshot_src: "{{ snapshot_name }}"
-  #   loop: "{{ LAB_SID }}"
-  #   delegate_to: localhost
 
-
-  # - name: 06. Change Lab DC vm networks
-  #   community.vmware.vmware_guest:
-  #     hostname: "{{ vcenter_hostname }}"
-  #     username: "{{ vcenter_username }}"
-  #     password: "{{ vcenter_password }}"
-  #     validate_certs: no
-  #     name: "{{ item.id }}-DC"
-  #     datacenter: "{{ datacenter_name }}"
-  #     folder: "{{ parent_folder }}{{ item.id }}"
-  #     esxi_hostname: "{{ item.host }}"
-  #     datastore: "{{ item.ds }}"
-  #     networks:
-  #       - name: "{{ item.id }}-Ansible"
-  #         label: "Network adapter 1"
-  #       - name: "VM-192.168.6.x"
-  #         label: "Network adapter 2"
-  #   loop: "{{ LAB_SID }}"
-  #   delegate_to: localhost
+  - name: 06. Change Lab DC vm networks
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      name: "{{ item.id }}-DC"
+      datacenter: "{{ datacenter_name }}"
+      folder: "{{ parent_folder }}{{ item.id }}"
+      esxi_hostname: "{{ item.host }}"
+      datastore: "{{ item.ds }}"
+      networks:
+        - name: "{{ item.id }}-Mgmt"
+          label: "Network adapter 1"
+        - name: "VM-192.168.6.x"
+          label: "Network adapter 2"
+    loop: "{{ LAB_SID }}"
+    delegate_to: localhost
 
 
   # - name: 07. Poweron Lab DC vm
